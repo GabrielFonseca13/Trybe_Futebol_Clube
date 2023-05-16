@@ -16,7 +16,7 @@ module.exports = {
           allowNull: false,
           field: 'team_name',
         }
-      }
+      },
     );
   },
 
