@@ -17,7 +17,7 @@ TeamModel.init({
   teamName: {
     type: STRING(100),
     allowNull: false,
-  }
+  },
 }, {
   // ... Outras configs
   underscored: true,
