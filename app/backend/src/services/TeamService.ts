@@ -5,12 +5,12 @@ class TeamService {
     const teams = await TeamModel.findAll();
     return teams;
   }
-}
 
-//   async getAllTeams(): Promise<ITeam[]> {
-//     const result = await this._teamModel.findAll();
-//     return result;
-//   }
-// }
+  public static async findById(id: number): Promise<TeamAttributes | null> {
+    const team = await TeamModel.findOne({ where: { id } });
+    if (!team) return null;
+    return team;
+  }
+}
 
 export default TeamService;

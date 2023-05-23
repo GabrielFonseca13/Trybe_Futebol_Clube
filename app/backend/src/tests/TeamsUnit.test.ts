@@ -18,7 +18,7 @@ describe('Testes de Teams', () => {
   afterEach(function () {
     sinon.restore()
   });
-  describe('Dado um banco vazio', () => {
+  describe('Dado um banco vazio usando FindAll', () => {
     it('Retorna um array vazio', async () => {
       // arrange
       sinon.stub(TeamModel, 'findAll').resolves([]);
@@ -29,12 +29,12 @@ describe('Testes de Teams', () => {
     })
   });
 
-  describe('Dado um banco populado', () => {
+  describe('Dado um banco populado usando FindAll', () => {
     it('Retorna um array populado com times e Ids', async () => {
       // arrange
       sinon.stub(TeamModel, 'findAll').resolves(allTeamsMock);
       // act
-      const result = await TeamModel.findAll();
+      const result = await TeamService.findAll();
       // assert
       result.forEach((time, index) => {
         expect(time).to.deep.equal(allTeamsMock[index]);
@@ -42,6 +42,24 @@ describe('Testes de Teams', () => {
     });
   });
 
+  describe('Dado um banco populado busca o time por Id especifico', () => {
+    it('Dado um Id válido, deve retornar o time especifico', async () => {
+      // arrange
+      sinon.stub(TeamModel, 'findOne').resolves(allTeamsMock[0]);
+      // act
+      const result = await TeamService.findById(1);
+      // assert
+      expect(result).to.deep.equal(allTeamsMock[0]);
+    });
+    it('Dado um Id inválido, deve lançar um erro de NotFound', async () => {
+      // arrange
+      sinon.stub(TeamModel, 'findOne').resolves(undefined);
+      // act
+      const result = await TeamService.findById(99);
+      // assert
+      expect(result).to.be.equal(null);
+    });
+  });
 
 });
 
