@@ -3,7 +3,7 @@ import db from '.';
 
 export interface UserAttributes {
   id: number;
-  userName: string;
+  username: string;
   role: string;
   email: string;
   password: string;
@@ -13,7 +13,7 @@ export type UserCreationalAttributes = Optional<UserAttributes, 'id'>;
 
 class UserModel extends Model<UserAttributes, UserCreationalAttributes> implements UserAttributes {
   declare id: number;
-  declare userName: string;
+  declare username: string;
   declare role: string;
   declare email: string;
   declare password: string;
@@ -27,10 +27,9 @@ UserModel.init(
       autoIncrement: true,
       primaryKey: true,
     },
-    userName: {
+    username: {
       allowNull: false,
       type: DataTypes.STRING,
-      field: 'user_name',
     },
     role: {
       allowNull: false,
