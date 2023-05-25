@@ -1,30 +1,42 @@
-O avaliador verificará se fazer o login sem um email, haverá o retorno de status bad request.
-Se o login não tiver o campo "email", o resultado retornado deverá ser a mensagem abaixo, com um status http 400:
-{ "message": "All fields must be filled" }
-O avaliador verificará se fazer login sem senha, o retorno será status bad request.
-Se o login não tiver o campo "password", o resultado retornado deverá ser conforme exibido abaixo, com um status http 400:
-{ "message": "All fields must be filled" }
+  15 - Desenvolva o endpoint /matches de forma que os dados apareçam corretamente na tela de partidas no front-end
+A rota deve ser um GET e retorna uma lista de partidas;
 
-As senhas que existem no banco de dados estão encriptadas.Veja a seção de Criptografia de Senhas para mais detalhes de como comparar a senha do banco com a senha do corpo da requisição.
+Será validado que a página apresentará todos os dados de partidas sem nenhum filtro.
 
-verificar se é possível fazer login com os dados corretos
-retornar Token
-direcionar para tela de jogos.
+Exemplo de retorno:
 
-criar rota do tipo Post 'login'
-
-controller
-verificar se tem o campo email preenchido
-se nao status http 400 { "message": "All fields must be filled" }
-
-Verificar se o email é valido
-verificar se tem o campo senha preenchido
-se nao status http 400 { "message": "All fields must be filled" }
-
-service
-criar serviço de login
-verificar se o email informado é igual ao email cadastrado.
-find by email
-descriptografar o campo senha e verificar se é o mesmo cadastrado.
-
-criar Service User e controller para getall e getbyID
+[
+  {
+    "id": 1,
+    "homeTeamId": 16,
+    "homeTeamGoals": 1,
+    "awayTeamId": 8,
+    "awayTeamGoals": 1,
+    "inProgress": false,
+    "homeTeam": {
+      "teamName": "São Paulo"
+    },
+    "awayTeam": {
+      "teamName": "Grêmio"
+    }
+  },
+  ...
+  {
+    "id": 41,
+    "homeTeamId": 16,
+    "homeTeamGoals": 2,
+    "awayTeamId": 9,
+    "awayTeamGoals": 0,
+    "inProgress": true,
+    "homeTeam": {
+      "teamName": "São Paulo"
+    },
+    "awayTeam": {
+      "teamName": "Internacional"
+    }
+  }
+]
+OBS: Você deverá definir os relacionamentos para homeTeam e awayTeam somente na model de partidas.
+  
+  15 - Desenvolva o endpoint `/matches` de forma que os dados apareçam corretamente na tela de partidas no front-end
+    ✕ Será validado que a página apresentará todos os dados de partidas sem nenhum filtro (3288 ms)
