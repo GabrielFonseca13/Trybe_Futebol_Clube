@@ -28,16 +28,6 @@ class LoginService {
     const token = jwt.sign({ id, username, role, email }, secret);
     return { token };
   }
-
-  // public static async getRole(email: string) {
-  //   const user = await UserModel.findOne({ where: { email } });
-
-  //   if (!user) {
-  //     return null;
-  //   }
-  //   const { role } = user.dataValues;
-  //   return role;
-  // }
 }
 
 export default LoginService;

@@ -1,19 +1,27 @@
-// import { NextFunction, Request, Response } from 'express';
-// import * as jwt from 'jsonwebtoken';
-// import { secret, validateToken } from '../services/utils/jwt.config';
+import { NextFunction, Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
+import { secret } from '../services/utils/jwt.config';
 
-// const authToken = (req: Request, res: Response, next: NextFunction) => {
-//   const token = req.headers.authorization;
-//   const tokenResult = validateToken(token);
-//   if (tokenResult.error && tokenResult.error.code === 'tokenNotFound') {
-//     return res.status(401).json({ message: tokenResult.error.message });
-//   }
+export type AuthenticatedRequest = Request & {
+  auth: {
+    id: string,
+    username: string,
+    role: string,
+    email: string,
+    iat?: number,
+  }
+};
 
-//   next();
-// } catch (err) {
-//   console.log(err);
-//   return res.status(401).json({ message: 'Token must be a valid token' });
-// }
-// };
-
-// export default authToken;
+export default async function authToken(req: Request, res: Response, next: NextFunction) {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token not found' });
+  }
+  try {
+    const tokenResult = jwt.verify(token, secret);
+    req.body.user = { tokenResult };
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: 'Token must be a valid token' });
+  }
+}

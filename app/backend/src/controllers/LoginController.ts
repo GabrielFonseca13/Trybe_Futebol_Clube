@@ -9,17 +9,12 @@ async function login(req: Request, res: Response) {
   return res.status(200).json({ token });
 }
 
-// async function getRole(req: Request, _res: Response) {
-//   const { email } = req.body.user;
-//   const response = await LoginService.getRole(email);
-//   // if (response.status === 401) {
-//   //   return res.status(response.status).json({ message: response });
-//   // }
-//   // return res.status(status).json({ role: message });
-//   console.log('RESPONSE CONTROLLER', response);
-// }
+async function getRole(req: Request, res: Response) {
+  const { tokenResult } = req.body.user;
+  return res.status(200).json({ role: tokenResult.role });
+}
 
 export default {
   login,
-  // getRole,
+  getRole,
 };

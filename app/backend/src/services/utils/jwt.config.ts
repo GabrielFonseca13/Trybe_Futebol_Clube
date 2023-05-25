@@ -2,25 +2,21 @@
 
 export const secret = 'jwt_secret';
 
-export const config: object = {
-  expiresIn: '6h',
-  algorithm: 'HS256',
+export type JwtPayload = {
+  id: string,
+  username: string,
+  role: string,
+  email: string,
+  iat?: number
 };
 
-// export const validateToken = (token?: string) => {
-//   if (!token) {
-//     return {
-//       error: {
-//         code: 'tokenNotFound',
-//         message: 'Token not found',
-//       },
-//     };
-//   }
-
-//   const isValid = jwt.verify(token, secret);
-//   return isValid;
+// export const config: object = {
+//   expiresIn: '6h',
+//   algorithm: 'HS256',
 // };
 
-// // export {
-//   validateToken,
-// };
+// export function verify(token: string): JwtPayload {
+//   const decoded = jwt.verify(token, 'SECRET');
+//   console.log('DECODED', decoded);
+//   return decoded as JwtPayload;
+// }
