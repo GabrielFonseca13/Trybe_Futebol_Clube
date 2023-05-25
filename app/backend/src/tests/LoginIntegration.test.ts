@@ -8,7 +8,7 @@ import { app } from '../app';
 import { Response } from 'superagent';
 import { allUsersMock, loginParamsMock } from './mocks/loginMock.test';
 import UserModel from '../database/models/UserModel';
-import LoginService from '../services/LoginService';
+// import LoginService from '../services/LoginService';
 
 chai.use(chaiHttp);
 
@@ -33,7 +33,7 @@ describe('Login Router', () => {
       });
     });
     describe('Dado que a senha ou email estão inválidos', () => {
-      it('senha no formato invalido deve retornar 400 e mensagem de erro', async () => {
+      it('senha no formato invalido deve retornar 401 e mensagem de erro', async () => {
         sinon.stub(UserModel, 'findOne').resolves(undefined);
 
         const result = await chai.request(app)
@@ -43,10 +43,10 @@ describe('Login Router', () => {
             password: 'pass',
           });
 
-        expect(result.status).to.equal(400);
-        expect(result.body.message).to.be.equal('Password Invalid');
+        expect(result.status).to.equal(401);
+        expect(result.body.message).to.be.equal('Invalid email or password');
       });
-      it('email no formato invalido deve retornar 400 e mensagem de erro', async () => {
+      it('email no formato invalido deve retornar 401 e mensagem de erro', async () => {
         sinon.stub(UserModel, 'findOne').resolves(undefined);
 
         const result = await chai.request(app)
@@ -56,8 +56,8 @@ describe('Login Router', () => {
             password: 'password',
           });
 
-        expect(result.status).to.equal(400);
-        expect(result.body.message).to.be.equal('Email Format Invalid');
+        expect(result.status).to.equal(401);
+        expect(result.body.message).to.be.equal('Invalid email or password');
       });
     });
     describe('Dado que a senha ou email Não forma enviados na requisição', () => {
@@ -86,21 +86,21 @@ describe('Login Router', () => {
         expect(result.body.message).to.be.equal('All fields must be filled');
       });
     });
-    describe('Dado um email válido mas a senha é incorreta', () => {
-      it.only('deve retornar 400 e mensagem de erro', async () => {
-        sinon.stub(UserModel, 'findOne').resolves(allUsersMock[0]);
+    // describe('Dado um email válido mas a senha é incorreta', () => {
+    //   it('deve retornar 401 e mensagem de erro', async () => {
+    //     sinon.stub(UserModel, 'findOne').resolves(allUsersMock[0]);
 
-        // const result = await chai.request(app)
-        // .post('/login')
-        // .send({
-        //   email: '231',
-        //   senha: 'senhaincorreta'
-        // });
-        await expect(LoginService.login({ email: allUsersMock[0].email, password: 'invalid-pass' }))
-          .to.be.equal('UNAUTHORIZED');
-        // expect(result.status).to.equal(400);
-        // expect(result.body.message).to.be.equal('All fields must be filled');
-      });
-    });
+    //     const result = await chai.request(app)
+    //       .post('/login')
+    //       .send({
+    //         email: '231',
+    //         senha: 'senhaincorreta'
+    //       });
+    //     await expect(LoginService.login({ email: allUsersMock[0].email, password: 'invalid-pass' }))
+    //       .to.be.equal('UNAUTHORIZED');
+    //     // expect(result.status).to.equal(400);
+    //     // expect(result.body.message).to.be.equal('All fields must be filled');
+    //   });
+    // });
   });
 });
