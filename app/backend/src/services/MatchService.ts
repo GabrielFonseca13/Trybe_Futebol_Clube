@@ -34,6 +34,19 @@ class MatchService {
     });
     return matches;
   }
+
+  public static async findMatchById(id: number): Promise<MatchAttributes | null> {
+    const match = await MatchModel.findOne({ where: { id } });
+    if (!match) return null;
+    return match;
+  }
+
+  public static async finishMatch(id: number): Promise<void> {
+    await MatchModel.update(
+      { inProgress: false },
+      { where: { id } },
+    );
+  }
 }
 
 export default MatchService;
