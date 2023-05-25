@@ -18,11 +18,22 @@ class MatchService {
     return matches;
   }
 
-  // public static async findById(id: number): Promise<MatchAttributes | null> {
-  //   const Match = await MatchModel.findOne({ where: { id } });
-  //   if (!Match) return null;
-  //   return Match;
-  // }
+  public static async findAllInProgress(inProgress: boolean): Promise<MatchAttributes[]> {
+    const matches = await MatchModel.findAll({
+      where: { inProgress },
+      include: [{
+        model: TeamModel,
+        as: 'homeTeam',
+        attributes: { exclude: ['id'] },
+      },
+      {
+        model: TeamModel,
+        as: 'awayTeam',
+        attributes: { exclude: ['id'] },
+      }],
+    });
+    return matches;
+  }
 }
 
 export default MatchService;
