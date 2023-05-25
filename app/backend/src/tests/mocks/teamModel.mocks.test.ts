@@ -1,6 +1,6 @@
 import TeamModel from "../../database/models/TeamModel"
 
-const allTeamsMock = [
+export const allTeamsMock = [
   { id: 1, teamName: 'Avaí/Kindermann' },
   { id: 2, teamName: 'Bahia' },
   { id: 3, teamName: 'Botafogo' },
@@ -18,7 +18,3 @@ const allTeamsMock = [
   { id: 15, teamName: 'São José-SP' },
   { id: 16, teamName: 'São Paulo' },
 ] as TeamModel[]
-
-export {
-  allTeamsMock
-}
