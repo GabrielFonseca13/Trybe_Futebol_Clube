@@ -87,21 +87,33 @@ describe('Login Router', () => {
         expect(result.body.message).to.be.equal('All fields must be filled');
       });
     });
-    // describe('Dado um email válido mas a senha é incorreta', () => {
-    //   it('deve retornar 401 e mensagem de erro', async () => {
-    //     sinon.stub(UserModel, 'findOne').resolves(allUsersMock[0]);
-
-    //     const result = await chai.request(app)
-    //       .post('/login')
-    //       .send({
-    //         email: '231',
-    //         senha: 'senhaincorreta'
-    //       });
-    //     await expect(LoginService.login({ email: allUsersMock[0].email, password: 'invalid-pass' }))
-    //       .to.be.equal('UNAUTHORIZED');
-    //     // expect(result.status).to.equal(400);
-    //     // expect(result.body.message).to.be.equal('All fields must be filled');
-    //   });
-    // });
   });
 });
+  // describe('GET /login/role', () => {
+  //   describe('Dado uma requisição inválida', () => {
+  //     it('Enviando requisição sem token Deve retornar status 401 e o erro', async () => {
+  //       // arrange => dado um contexto
+  //       sinon.stub(UserModel, 'findOne').resolves(undefined)
+  //       // act => ao executar um código
+  //       const result = await chai.request(app)
+  //         .get('/login/role')
+  //       // assert => espero um resultado
+  //       expect(result.status).to.be.equal(200);
+  //       expect(result.body.token).not.to.be.empty;
+  //     });
+  // });
+  // describe('Dado uma requisição válida', () => {
+  //   it('Deve retornar status 200 e o role', async () => {
+  //     // arrange => dado um contexto
+  //     sinon.stub(UserModel, 'findOne').resolves(allUsersMock[0])
+  //     // act => ao executar um código
+  //     const result = await chai.request(app)
+  //       .post('/login')
+  //       .send(loginParamsMock);
+  //     // assert => espero um resultado
+  //     expect(result.status).to.be.equal(200);
+  //     expect(result.body.token).not.to.be.empty;
+  //   });
+  // });
+  // });
+// });
