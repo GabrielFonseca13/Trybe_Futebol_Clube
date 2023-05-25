@@ -7,7 +7,6 @@ WORKDIR /app-backend
 # Copiar os package.json e package-lock.json para o container
 COPY package.json ./
 COPY package-lock.json ./
-COPY package.npm ./
 
 # Instalar as dependências Node
 RUN npm install

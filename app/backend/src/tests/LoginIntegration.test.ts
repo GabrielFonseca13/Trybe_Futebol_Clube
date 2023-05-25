@@ -6,13 +6,11 @@ import chaiHttp = require('chai-http');
 import { app } from '../app';
 
 import { Response } from 'superagent';
-// import chaiAsPromised from 'chai-as-promised';
 import { allUsersMock, loginParamsMock } from './mocks/loginMock.test';
 import UserModel from '../database/models/UserModel';
 import LoginService from '../services/LoginService';
 
 chai.use(chaiHttp);
-// chai.use(chaiAsPromised)
 
 const { expect } = chai;
 
@@ -88,21 +86,21 @@ describe('Login Router', () => {
         expect(result.body.message).to.be.equal('All fields must be filled');
       });
     });
-    // describe('Dado um email válido mas a senha é incorreta', () => {
-    //   it.only('deve retornar 400 e mensagem de erro', async () => {
-    //     sinon.stub(UserModel, 'findOne').resolves(allUsersMock[0]);
+    describe('Dado um email válido mas a senha é incorreta', () => {
+      it.only('deve retornar 400 e mensagem de erro', async () => {
+        sinon.stub(UserModel, 'findOne').resolves(allUsersMock[0]);
 
-    //     // const result = await chai.request(app)
-    //     // .post('/login')
-    //     // .send({
-    //     //   email: '231',
-    //     //   senha: 'senhaincorreta'
-    //     // });
-    //     await expect(LoginService.login({ email: allUsersMock[0].email, password: 'invalid-pass' }))
-    //       .to.be.equal('UNAUTHORIZED');
-    //     // expect(result.status).to.equal(400);
-    //     // expect(result.body.message).to.be.equal('All fields must be filled');
-    //   });
-    // });
+        // const result = await chai.request(app)
+        // .post('/login')
+        // .send({
+        //   email: '231',
+        //   senha: 'senhaincorreta'
+        // });
+        await expect(LoginService.login({ email: allUsersMock[0].email, password: 'invalid-pass' }))
+          .to.be.equal('UNAUTHORIZED');
+        // expect(result.status).to.equal(400);
+        // expect(result.body.message).to.be.equal('All fields must be filled');
+      });
+    });
   });
 });

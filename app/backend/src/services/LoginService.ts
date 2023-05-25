@@ -12,7 +12,7 @@ class LoginService {
   public static async login(params: loginParams) {
     const user = await UserModel.findOne({ where: { email: params.email } });
     if (!user) {
-      return { status: 400, message: 'All fields must be filled' };
+      return { status: 401, message: 'Invalid email or password' };
     }
     // validar password
     const isValidPassword = bcryptjs.compareSync(params.password, user.password);
@@ -20,7 +20,7 @@ class LoginService {
     // console.log('user password', user.password);
     // console.log('isvalid password', isValidPassword);
     if (!isValidPassword) {
-      throw new Error('UNAUTHORIZED');
+      return { status: 401, message: 'Invalid email or password' };
     }
     const { id, username, role, email } = user;
     const token = sign({ id, username, role, email }, secret, config);
