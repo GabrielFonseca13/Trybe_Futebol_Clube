@@ -1,31 +1,43 @@
-import { sign } from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import * as bcryptjs from 'bcryptjs';
 import UserModel from '../database/models/UserModel';
-import { config, secret } from './utils/jwt.config';
+import { secret } from './utils/jwt.config';
 
 export type loginParams = {
   email: string,
   password: string,
 };
 
+export const INVALID_MESSAGE = 'Invalid email or password';
+
 class LoginService {
   public static async login(params: loginParams) {
     const user = await UserModel.findOne({ where: { email: params.email } });
+
     if (!user) {
-      return { status: 401, message: 'Invalid email or password' };
+      return { error: { code: 'InvalidValues', message: INVALID_MESSAGE } };
     }
-    // validar password
+
     const isValidPassword = bcryptjs.compareSync(params.password, user.password);
-    // console.log('params password', params.password);
-    // console.log('user password', user.password);
-    // console.log('isvalid password', isValidPassword);
     if (!isValidPassword) {
-      return { status: 401, message: 'Invalid email or password' };
+      return { error: { code: 'InvalidValues', message: INVALID_MESSAGE } };
     }
+
     const { id, username, role, email } = user;
-    const token = sign({ id, username, role, email }, secret, config);
-    return { status: 200, message: token };
+
+    const token = jwt.sign({ id, username, role, email }, secret);
+    return { token };
   }
+
+  // public static async getRole(email: string) {
+  //   const user = await UserModel.findOne({ where: { email } });
+
+  //   if (!user) {
+  //     return null;
+  //   }
+  //   const { role } = user.dataValues;
+  //   return role;
+  // }
 }
 
 export default LoginService;

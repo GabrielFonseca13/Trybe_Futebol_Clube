@@ -8,6 +8,7 @@ import { app } from '../app';
 import { Response } from 'superagent';
 import { allUsersMock, loginParamsMock } from './mocks/loginMock.test';
 import UserModel from '../database/models/UserModel';
+import { INVALID_MESSAGE } from '../services/LoginService';
 // import LoginService from '../services/LoginService';
 
 chai.use(chaiHttp);
@@ -44,7 +45,7 @@ describe('Login Router', () => {
           });
 
         expect(result.status).to.equal(401);
-        expect(result.body.message).to.be.equal('Invalid email or password');
+        expect(result.body.message).to.be.equal(INVALID_MESSAGE);
       });
       it('email no formato invalido deve retornar 401 e mensagem de erro', async () => {
         sinon.stub(UserModel, 'findOne').resolves(undefined);

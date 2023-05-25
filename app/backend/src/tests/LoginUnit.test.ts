@@ -7,7 +7,7 @@ import { app } from '../app';
 import UserModel from '../database/models/TeamModel';
 
 import { Response } from 'superagent';
-import LoginService from '../services/LoginService';
+import LoginService, { INVALID_MESSAGE } from '../services/LoginService';
 import {
   allUsersMock,
   loginParamsMock,
@@ -31,8 +31,7 @@ describe('Testes de Login', () => {
       // act
       const result = await LoginService.login(loginParamsMock)
       // assert  
-      expect(result.status).to.equal(200);
-      expect(result.message.length > 30).to.be.true
+      expect(result.token).not.to.be.empty;
     })
   });
   describe('Enviando dados inválidos', () => {
@@ -41,21 +40,10 @@ describe('Testes de Login', () => {
       sinon.stub(UserModel, 'findOne').resolves();
       // act
       const result = await LoginService.login(loginParamsMockWithoutLogin)
-      console.log(result);
       // assert  
-      expect(result.status).to.equal(400);
-      expect(result.message).to.be.equal('All fields must be filled')
+      expect(result.error?.code).to.equal('InvalidValues');
+      expect(result.error?.message).to.be.equal(INVALID_MESSAGE)
     });
-    // it('Enviando requisição sem password', async () => {
-    //   // arrange
-    //   sinon.stub(UserModel, 'findOne').resolves();
-    //   // act
-    //   const result = await LoginService.login(loginParamsMockWithoutPassword)
-    //   console.log(result);
-    //   // assert  
-    //   expect(result.status).to.equal(400);
-    //   expect(result.message).to.be.equal('All fields must be filled')
-    // });
     // it('Enviando requisição com email no formato inválido', async () => {
     //   // arrange
     //   sinon.stub(UserModel, 'findOne').resolves();
