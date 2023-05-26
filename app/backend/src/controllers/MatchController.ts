@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import MatchService from '../services/MatchService';
+import TeamService from '../services/TeamService';
 
 async function getAllMatches(req: Request, res: Response) {
   const { inProgress } = req.query;
@@ -47,8 +48,17 @@ async function changeScores(req: Request, res: Response) {
 async function createMatch(req: Request, res: Response) {
   // receber os dados da partida do body
   const newMatchData = req.body;
-  // verificas se os campos estao vindo OK - 
-  // em caso de erro retornar o status e erros
+  // verificar se os times existem 
+  const { homeTeamId, awayTeamId } = newMatchData;
+  // verificar se sao times iguais,
+  if (homeTeamId === awayTeamId) return res.status(422).json({ message: "It is not possible to create a match with two equal teams" });
+
+  const homeTeamsExists = await TeamService.findById(homeTeamId);
+  if (!homeTeamsExists) return res.status(404).json({ message: 'There is no team with such id!' });
+
+  const awayTeamExists = await TeamService.findById(awayTeamId);
+  if (!awayTeamExists) return res.status(404).json({ message: 'There is no team with such id!' });
+
   // chamar a service para inserir os dados no db.
   const newMatch = await MatchService.createMatch(newMatchData);
   // retornar o status 200 e o corpo da partida criada.
