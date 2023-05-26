@@ -1,5 +1,5 @@
 import TeamModel from '../database/models/TeamModel';
-import MatchModel, { MatchAttributes, MatchGoals } from '../database/models/MatchModel';
+import MatchModel, { MatchAttributes, MatchCreationalAttributes, MatchGoals } from '../database/models/MatchModel';
 
 class MatchService {
   public static async findAll(): Promise<MatchAttributes[]> {
@@ -57,6 +57,14 @@ class MatchService {
       { where: { id } },
     );
   }
+  public static async createMatch(newMatchData: MatchCreationalAttributes) {
+    // acessar a model com create ou insert, enviar os dados para inserir
+    const newMatch = await MatchModel.create(newMatchData)
+    console.log('NEWmATCH SERVICE', newMatch)
+    // retornar a partida.
+    return newMatch;
+  }
 }
+
 
 export default MatchService;

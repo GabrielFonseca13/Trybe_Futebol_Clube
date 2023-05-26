@@ -67,6 +67,8 @@ MatchModel.init({
   },
   inProgress: {
     type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
     field: 'in_progress',
   },
 }, {

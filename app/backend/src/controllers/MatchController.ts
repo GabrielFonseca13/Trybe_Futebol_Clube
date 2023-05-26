@@ -44,8 +44,20 @@ async function changeScores(req: Request, res: Response) {
   return res.status(200).json({ message: 'Placar alterado' });
 }
 
+async function createMatch(req: Request, res: Response) {
+  // receber os dados da partida do body
+  const newMatchData = req.body;
+  // verificas se os campos estao vindo OK - 
+  // em caso de erro retornar o status e erros
+  // chamar a service para inserir os dados no db.
+  const newMatch = await MatchService.createMatch(newMatchData);
+  // retornar o status 200 e o corpo da partida criada.
+  return res.status(201).json(newMatch);
+}
+
 export default {
   getAllMatches,
   finishMatch,
   changeScores,
+  createMatch,
 };
