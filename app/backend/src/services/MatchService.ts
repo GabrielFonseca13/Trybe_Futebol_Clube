@@ -2,7 +2,7 @@ import TeamModel from '../database/models/TeamModel';
 import MatchModel, {
   MatchAttributes,
   MatchCreationalAttributes,
-  MatchGoals
+  MatchGoals,
 } from '../database/models/MatchModel';
 
 class MatchService {
@@ -61,11 +61,11 @@ class MatchService {
       { where: { id } },
     );
   }
+
   public static async createMatch(newMatchData: MatchCreationalAttributes) {
-    const newMatch = await MatchModel.create(newMatchData)
+    const newMatch = await MatchModel.create(newMatchData);
     return newMatch;
   }
 }
-
 
 export default MatchService;
