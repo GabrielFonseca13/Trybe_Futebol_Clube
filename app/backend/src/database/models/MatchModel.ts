@@ -11,6 +11,11 @@ export interface MatchAttributes {
   inProgress: boolean,
 }
 
+export interface MatchGoals {
+  homeTeamGoals: number,
+  awayTeamGoals: number,
+}
+
 export type MatchCreationalAttributes = Optional<MatchAttributes, 'id'>;
 
 class MatchModel extends Model<MatchAttributes, MatchCreationalAttributes>

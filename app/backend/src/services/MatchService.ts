@@ -1,5 +1,5 @@
 import TeamModel from '../database/models/TeamModel';
-import MatchModel, { MatchAttributes } from '../database/models/MatchModel';
+import MatchModel, { MatchAttributes, MatchGoals } from '../database/models/MatchModel';
 
 class MatchService {
   public static async findAll(): Promise<MatchAttributes[]> {
@@ -44,6 +44,16 @@ class MatchService {
   public static async finishMatch(id: number): Promise<void> {
     await MatchModel.update(
       { inProgress: false },
+      { where: { id } },
+    );
+  }
+
+  public static async changeScores(id: number, match: MatchGoals): Promise<void> {
+    await MatchModel.update(
+      {
+        homeTeamGoals: match.homeTeamGoals,
+        awayTeamGoals: match.awayTeamGoals,
+      },
       { where: { id } },
     );
   }
