@@ -58,9 +58,7 @@ class MatchService {
     );
   }
   public static async createMatch(newMatchData: MatchCreationalAttributes) {
-    // acessar a model com create ou insert, enviar os dados para inserir
     const newMatch = await MatchModel.create(newMatchData)
-    // retornar a partida.
     return newMatch;
   }
 }
