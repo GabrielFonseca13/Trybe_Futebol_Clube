@@ -44,7 +44,8 @@ async function createMatch(req: Request, res: Response) {
   const { homeTeamId, awayTeamId } = newMatchData;
 
   if (homeTeamId === awayTeamId) {
-    res.status(422).json({ message: 'It is not possible to create a match with two equal teams' });
+    return res.status(422)
+      .json({ message: 'It is not possible to create a match with two equal teams' });
   }
 
   const homeTeamsExists = await TeamService.findById(homeTeamId);
