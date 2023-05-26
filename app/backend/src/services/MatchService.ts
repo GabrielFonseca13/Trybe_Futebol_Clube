@@ -1,5 +1,9 @@
 import TeamModel from '../database/models/TeamModel';
-import MatchModel, { MatchAttributes, MatchCreationalAttributes, MatchGoals } from '../database/models/MatchModel';
+import MatchModel, {
+  MatchAttributes,
+  MatchCreationalAttributes,
+  MatchGoals
+} from '../database/models/MatchModel';
 
 class MatchService {
   public static async findAll(): Promise<MatchAttributes[]> {
