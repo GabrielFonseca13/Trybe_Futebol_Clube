@@ -10,8 +10,8 @@ export interface TeamPerformance {
   totalLosses: number,
   goalsFavor: number,
   goalsOwn: number,
-  goalsBalance?: number,
-  efficiency?: number,
+  goalsBalance: number,
+  efficiency: string,
 }
 
 class LeaderBoardService {
@@ -26,8 +26,8 @@ class LeaderBoardService {
       totalLosses: 0,
       goalsFavor: 0,
       goalsOwn: 0,
-      // goalsBalance: 0,
-      // efficiency: 0,
+      goalsBalance: 0,
+      efficiency: '',
     };
     return defaultStatsTeam;
   }
@@ -36,33 +36,56 @@ class LeaderBoardService {
   public static insertTeamStats(team:TeamAttributes, matches: MatchAttributes[]) {
     const teamStats = this.statsTeam();
     teamStats.name = team.teamName;
-    matches.forEach((match) => {
+    matches.forEach((match: MatchAttributes) => {
       if (team.id === match.homeTeamId) {
-        teamStats.totalGames += 1;
-        teamStats.goalsFavor += match.homeTeamGoals;
+        teamStats.totalGames += 1; teamStats.goalsFavor += match.homeTeamGoals;
         teamStats.goalsOwn += match.awayTeamGoals;
-        // teamStats.goalsBalance += (match.homeTeamGoals - match.awayTeamGoals);
+        teamStats.goalsBalance += match.homeTeamGoals - match.awayTeamGoals;
         if (match.homeTeamGoals > match.awayTeamGoals) {
-          teamStats.totalPoints += 3;
-          teamStats.totalVictories += 1;
+          teamStats.totalPoints += 3; teamStats.totalVictories += 1;
         } else if (match.homeTeamGoals === match.awayTeamGoals) {
-          teamStats.totalPoints += 1;
-          teamStats.totalDraws += 1;
+          teamStats.totalPoints += 1; teamStats.totalDraws += 1;
         } else teamStats.totalLosses += 1;
       }
     });
-    return teamStats;
+    const allStatsTeam = LeaderBoardService.getPerformance(teamStats);
+    return allStatsTeam;
   }
 
   public static async getHomePerformance() {
-    const allTeams = await TeamModel.findAll();
+    const allTeams: TeamAttributes[] = await TeamModel.findAll();
     const allMatches = await MatchModel.findAll({ where: { inProgress: false } });
     const allTeamsStatusArr: TeamPerformance[] = [];
-    allTeams.forEach((team) => {
+    allTeams.forEach((team: TeamAttributes) => {
       const teamData = LeaderBoardService.insertTeamStats(team, allMatches);
       allTeamsStatusArr.push(teamData);
     });
-    return allTeamsStatusArr;
+    const classification = LeaderBoardService.sortTeamsClassification(allTeamsStatusArr);
+    return classification;
+  }
+
+  public static getPerformance(teamStats: TeamPerformance) {
+    const performance = ((teamStats.totalPoints / (teamStats.totalGames * 3)) * 100);
+    return { ...teamStats, efficiency: performance.toFixed(2) };
+  }
+
+  public static sortTeamsClassification(arrTeamStatus: TeamPerformance[]) {
+    const classification = arrTeamStatus.sort((a, b) => {
+      if (a.totalPoints > b.totalPoints) return -1;
+      if (a.totalPoints < b.totalPoints) return 1;
+
+      if (a.totalVictories > b.totalVictories) return -1;
+      if (a.totalVictories < b.totalVictories) return 1;
+
+      if (a.goalsBalance > b.goalsBalance) return -1;
+      if (a.goalsBalance < b.goalsBalance) return 1;
+
+      if (a.goalsFavor > b.goalsFavor) return -1;
+      if (a.goalsFavor < b.goalsFavor) return 1;
+
+      return 0;
+    });
+    return classification;
   }
 }
 
