@@ -32,8 +32,7 @@ class LeaderBoardService {
     return defaultStatsTeam;
   }
 
-  // iterar todas as partidas para pegar todos os dados do time da casa.
-  public static insertTeamStats(team:TeamAttributes, matches: MatchAttributes[]) {
+  public static insertHomeTeamStats(team:TeamAttributes, matches: MatchAttributes[]) {
     const teamStats = this.statsTeam();
     teamStats.name = team.teamName;
     matches.forEach((match: MatchAttributes) => {
@@ -52,12 +51,43 @@ class LeaderBoardService {
     return allStatsTeam;
   }
 
+  public static insertAwayTeamStats(team:TeamAttributes, matches: MatchAttributes[]) {
+    const teamStats = this.statsTeam();
+    teamStats.name = team.teamName;
+    matches.forEach((match: MatchAttributes) => {
+      if (team.id === match.awayTeamId) {
+        teamStats.totalGames += 1; teamStats.goalsFavor += match.awayTeamGoals;
+        teamStats.goalsOwn += match.homeTeamGoals;
+        teamStats.goalsBalance += match.awayTeamGoals - match.homeTeamGoals;
+        if (match.awayTeamGoals > match.homeTeamGoals) {
+          teamStats.totalPoints += 3; teamStats.totalVictories += 1;
+        } else if (match.awayTeamGoals === match.homeTeamGoals) {
+          teamStats.totalPoints += 1; teamStats.totalDraws += 1;
+        } else teamStats.totalLosses += 1;
+      }
+    });
+    const allStatsTeam = LeaderBoardService.getPerformance(teamStats);
+    return allStatsTeam;
+  }
+
   public static async getHomePerformance() {
     const allTeams: TeamAttributes[] = await TeamModel.findAll();
     const allMatches = await MatchModel.findAll({ where: { inProgress: false } });
     const allTeamsStatusArr: TeamPerformance[] = [];
     allTeams.forEach((team: TeamAttributes) => {
-      const teamData = LeaderBoardService.insertTeamStats(team, allMatches);
+      const teamData = LeaderBoardService.insertHomeTeamStats(team, allMatches);
+      allTeamsStatusArr.push(teamData);
+    });
+    const classification = LeaderBoardService.sortTeamsClassification(allTeamsStatusArr);
+    return classification;
+  }
+
+  public static async getAwayPerformance() {
+    const allTeams: TeamAttributes[] = await TeamModel.findAll();
+    const allMatches = await MatchModel.findAll({ where: { inProgress: false } });
+    const allTeamsStatusArr: TeamPerformance[] = [];
+    allTeams.forEach((team: TeamAttributes) => {
+      const teamData = LeaderBoardService.insertAwayTeamStats(team, allMatches);
       allTeamsStatusArr.push(teamData);
     });
     const classification = LeaderBoardService.sortTeamsClassification(allTeamsStatusArr);
