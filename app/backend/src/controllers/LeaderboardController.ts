@@ -11,7 +11,13 @@ async function getAwayPerformance(req: Request, res: Response) {
   return res.status(200).json(awayTeamPerformance);
 }
 
+async function getGeneralPerformance(req: Request, res: Response) {
+  const awayTeamPerformance = await LeaderboardService.getGeneralPerformance();
+  return res.status(200).json(awayTeamPerformance);
+}
+
 export default {
   getHomePerformance,
   getAwayPerformance,
+  getGeneralPerformance,
 };

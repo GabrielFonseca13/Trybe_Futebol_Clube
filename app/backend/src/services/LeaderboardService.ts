@@ -14,7 +14,7 @@ export interface TeamPerformance {
   efficiency: string,
 }
 
-class LeaderBoardService {
+class LeaderboardService {
   // criar um novo objeto com os atributos default do time
   public static statsTeam(): TeamPerformance {
     const defaultStatsTeam: TeamPerformance = {
@@ -47,7 +47,7 @@ class LeaderBoardService {
         } else teamStats.totalLosses += 1;
       }
     });
-    const allStatsTeam = LeaderBoardService.getPerformance(teamStats);
+    const allStatsTeam = LeaderboardService.getPerformance(teamStats);
     return allStatsTeam;
   }
 
@@ -66,7 +66,24 @@ class LeaderBoardService {
         } else teamStats.totalLosses += 1;
       }
     });
-    const allStatsTeam = LeaderBoardService.getPerformance(teamStats);
+    const allStatsTeam = LeaderboardService.getPerformance(teamStats);
+    return allStatsTeam;
+  }
+
+  public static insertTeamStats(team:TeamAttributes, matches: MatchAttributes[]) {
+    const teamStats = this.statsTeam();
+    teamStats.name = team.teamName;
+    const statsHome = LeaderboardService.insertHomeTeamStats(team, matches);
+    const statsAway = LeaderboardService.insertAwayTeamStats(team, matches);
+    teamStats.totalPoints = statsHome.totalPoints + statsAway.totalPoints;
+    teamStats.totalGames = statsHome.totalGames + statsAway.totalGames;
+    teamStats.totalVictories = statsHome.totalVictories + statsAway.totalVictories;
+    teamStats.totalDraws = statsHome.totalDraws + statsAway.totalDraws;
+    teamStats.totalLosses = statsHome.totalLosses + statsAway.totalLosses;
+    teamStats.goalsFavor = statsHome.goalsFavor + statsAway.goalsFavor;
+    teamStats.goalsOwn = statsHome.goalsOwn + statsAway.goalsOwn;
+    teamStats.goalsBalance = statsHome.goalsBalance + statsAway.goalsBalance;
+    const allStatsTeam = LeaderboardService.getPerformance(teamStats);
     return allStatsTeam;
   }
 
@@ -75,10 +92,10 @@ class LeaderBoardService {
     const allMatches = await MatchModel.findAll({ where: { inProgress: false } });
     const allTeamsStatusArr: TeamPerformance[] = [];
     allTeams.forEach((team: TeamAttributes) => {
-      const teamData = LeaderBoardService.insertHomeTeamStats(team, allMatches);
+      const teamData = LeaderboardService.insertHomeTeamStats(team, allMatches);
       allTeamsStatusArr.push(teamData);
     });
-    const classification = LeaderBoardService.sortTeamsClassification(allTeamsStatusArr);
+    const classification = LeaderboardService.sortTeamsClassification(allTeamsStatusArr);
     return classification;
   }
 
@@ -87,10 +104,22 @@ class LeaderBoardService {
     const allMatches = await MatchModel.findAll({ where: { inProgress: false } });
     const allTeamsStatusArr: TeamPerformance[] = [];
     allTeams.forEach((team: TeamAttributes) => {
-      const teamData = LeaderBoardService.insertAwayTeamStats(team, allMatches);
+      const teamData = LeaderboardService.insertAwayTeamStats(team, allMatches);
       allTeamsStatusArr.push(teamData);
     });
-    const classification = LeaderBoardService.sortTeamsClassification(allTeamsStatusArr);
+    const classification = LeaderboardService.sortTeamsClassification(allTeamsStatusArr);
+    return classification;
+  }
+
+  public static async getGeneralPerformance() {
+    const allTeams: TeamAttributes[] = await TeamModel.findAll();
+    const allMatches = await MatchModel.findAll({ where: { inProgress: false } });
+    const allTeamsStatusArr: TeamPerformance[] = [];
+    allTeams.forEach((team: TeamAttributes) => {
+      const teamData = LeaderboardService.insertTeamStats(team, allMatches);
+      allTeamsStatusArr.push(teamData);
+    });
+    const classification = LeaderboardService.sortTeamsClassification(allTeamsStatusArr);
     return classification;
   }
 
@@ -119,4 +148,4 @@ class LeaderBoardService {
   }
 }
 
-export default LeaderBoardService;
+export default LeaderboardService;
