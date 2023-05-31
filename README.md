@@ -1,4 +1,5 @@
 **Trybe Futebol Clube**
+
 Este repositório contém o projeto "Trybe Futebol Clube", desenvolvido como parte do curso de Desenvolvimento Web da Trybe. O projeto é uma aplicação web para gerenciamento de clubes de futebol, criar times, usuários, agendar jogos e registrar os resultados.
 
 <!-- Funcionalidades
